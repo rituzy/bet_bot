@@ -1,0 +1,14 @@
+## Cache
+__pycache__/
+ 
+.idea/
+workspace.xml
+config/
+config/config_data.py
+<<<<<<< HEAD
+betcity_bot_venv/
+venv/
+*.log
+*.log.*
+nohup.out
+
