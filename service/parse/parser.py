@@ -128,11 +128,12 @@ class Parser:
                             cur_stat = game_stats.get(stat_id)
                             if cur_stat.get("name") == self.HOCKEY_TITLE:
                                 for total_id in cur_stat.get("data"):
-                                    total_element = cur_stat.get("data")\
-                                        .get(total_id).get("blocks").get("T")
-                                    if total_element is not None:
-                                        total_b_match[total_element.get("Tot")] = \
-                                            total_element.get("Tb").get("kf")
+                                    if cur_stat.get("data").get(total_id).get("blocks") is not None:
+                                        total_element = cur_stat.get("data")\
+                                            .get(total_id).get("blocks").get("T")
+                                        if total_element is not None and total_element.get("Tb") is not None:
+                                            total_b_match[total_element.get("Tot")] = \
+                                                total_element.get("Tb").get("kf")
                             if cur_stat.get("name") == self.PERIODS_RESULTS_TITLE:
                                 for total_per_id in cur_stat.get("rows"):
                                     total_per_element = cur_stat.get("rows").get(total_per_id)
@@ -140,13 +141,15 @@ class Parser:
                                         match_total_data = total_per_element.get("data")
                                         for total_per_id_sub_id in match_total_data:
                                             tags = ["T{}".format(i) for i in range(1, 10)]
-                                            cur_total_period_result = \
-                                                [match_total_data.get(total_per_id_sub_id)
-                                                 .get("blocks").get(tag) for tag in tags]
-                                            for cur_per in cur_total_period_result:
-                                                if cur_per is not None:
-                                                    total_b_period2[cur_per.get("Tot")] =\
-                                                        cur_per.get("Tb").get("kf")
+                                            if match_total_data.get(total_per_id_sub_id) is not None \
+                                                and match_total_data.get(total_per_id_sub_id).get("blocks") is not None:
+                                                cur_total_period_result = \
+                                                    [match_total_data.get(total_per_id_sub_id)
+                                                     .get("blocks").get(tag) for tag in tags]
+                                                for cur_per in cur_total_period_result:
+                                                    if cur_per is not None and cur_per.get("Tb") is not None:
+                                                        total_b_period2[cur_per.get("Tot")] =\
+                                                            cur_per.get("Tb").get("kf")
         result_games.append(
             HockeyGame(name_ht, name_at, current_time, score, total_b_match, total_b_period2)
         )

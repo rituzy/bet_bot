@@ -5,6 +5,7 @@ from service.hockey_event_checker import HockeyEventChecker
 from service.parse.parser import Parser
 from send.telegram_sender_impl import TelegramSender
 from service.parse.web.tor_request_impl import TorRequest
+from dao.mysql_db import Saver
 import config.config_data as conf
 
 
@@ -22,6 +23,7 @@ class Runner:
         self.total_score_all_match = conf.TOTAL_SCORE_ALL_MATCH
         self.is_zero_score_match = conf.IS_ZERO_SCORE_MATCH
         self._request = request
+        self.saver = Saver(conf.DB_HOST, conf.DB_USERNAME, conf.DB_PASSWORD, conf.DATABASE)
 
     def run(self):
         """Main function to run the app"""
@@ -45,6 +47,7 @@ class Runner:
                     self.sender.send(self.bot_address, self.bot_chat_id,
                                      cur_game.format(' is ready for betting!')
                                      )
+                    self.saver.save(game_stat.game)
 
             time.sleep(self.sleep_delay)
 

@@ -19,8 +19,12 @@ class TelegramSender(Sender):
             bot_address_to_send_current = bot_address_to_send \
                                           + cid + '&action=' + self.urlify(action)
             self.logger.debug(bot_address_to_send_current)
-            conn = req.urlopen(bot_address_to_send_current)
-            return_str = str(conn.read())
-            self.logger.debug('Return code from the sending page: %s', str(conn.getcode()))
-            self.logger.debug('Return message result from the sending page: %s',
-                              return_str.split('Result :', 1)[1].split('!\n\t\t</div>', 1)[0])
+            try:
+                conn = req.urlopen(bot_address_to_send_current)
+                return_str = str(conn.read())
+                self.logger.debug('Return code from the sending page: %s', str(conn.getcode()))
+                self.logger.debug('Return message result from the sending page: %s',
+                                  return_str.split('Result :', 1)[1].split('!\n\t\t</div>', 1)[0])
+            except HTTPError:
+                self.logger.error('Could not send to telegram!')
+

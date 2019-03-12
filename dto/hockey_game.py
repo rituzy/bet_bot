@@ -1,5 +1,5 @@
 """DTO Hockey Game for storing game data"""
-
+import transliterate
 
 class HockeyGame:
     """DTO Hockey Game for storing game data"""
@@ -9,12 +9,19 @@ class HockeyGame:
         self.name_at = name_at
         self.current_time = current_time
 
-        if "main" in score and len(score["main"]) > 0:
+        if score is not None \
+                and "main" in score \
+                and score["main"] is not None \
+                and len(score["main"]) > 0:
             self.score_match = score["main"][0]
         else:
             self.score_match = []
 
-        self.periods_scores = score["ext"] if "ext" in score else []
+        if score is not None and "ext" in score:
+            self.periods_scores = score["ext"]
+        else:
+            self.periods_scores = []
+
         self.total_b_match = total_b_match
         self.total_b_period2 = total_b_period2
 
@@ -32,3 +39,9 @@ class HockeyGame:
         to_return = "{} - {} Score: {} Score periods: {}" \
             .format(self.name_ht, self.name_at, self.score_match, self.periods_scores)
         return to_return.replace('\n', ' ').replace('\r', '')
+
+    def translit(self):
+        """translate russian letters string to string of latin letters"""
+        self.name_ht = transliterate.translit(self.name_ht, reversed=True)
+        self.name_at = transliterate.translit(self.name_at, reversed=True)
+        self.current_time = transliterate.translit(self.current_time, reversed=True)
