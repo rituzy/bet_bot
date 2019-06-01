@@ -30,7 +30,7 @@ class Runner:
         parser = Parser(self._request)
         while True:
             game_stats = [HockeyGameStats(g) for g in parser.parse()]
-            checker = checker()
+            checker = CheckerImpl()
             for game_stat in game_stats:
                 game_stat.calculate()
                 result = checker.check_all(
