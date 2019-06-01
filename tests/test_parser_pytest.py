@@ -1,42 +1,27 @@
+import mock
 import testtools
-from requests_mock.contrib import fixture
 
 from service.parse.parser import Parser
 
-parser = Parser()
 
-
-class MyTestCase(testtools.TestCase):
-
-    TS_URL = parser.get_ts_link()
-    VERSION_URL = 'https://betcity.ru/version.json?&ts=123'
+class ParserTest(testtools.TestCase):
 
     def setUp(self):
-        super(MyTestCase, self).setUp()
-        self.requests_mock = self.useFixture(fixture.Fixture())
-        self.requests_mock.register_uri(
-            'GET', self.TS_URL, text='{"reply":{"ts":1549436573,"dc":0},"ok":true,"lng":0,"tnow":1549436573}'
-        )
-        self.requests_mock.register_uri(
-            'GET', self.VERSION_URL, text='{"version":71}'
-        )
+        super(ParserTest, self).setUp()
+        self.parser = Parser(None)
 
-    @staticmethod
-    def test_parse_csn():
-        assert (parser.csn == 'ooca9s')
-
-    @staticmethod
-    def test_parse_ts():
-        ts = parser.get_ts()
+    @mock.patch('service.parse.parser.Parser.get_ts', return_value=123)
+    def test_parse_ts(self, get_ts_function):
+        ts = self.parser.get_ts()
         assert(ts is not None)
         assert(isinstance(ts, int))
 
-    @staticmethod
-    def test_parse_version():
-        version = parser. _get_version(123)
+    @mock.patch('service.parse.parser.Parser._get_version', return_value=345)
+    def test_parse_version(self, get_version_function):
+        version = self.parser._get_version(123)
         assert(version is not None)
         assert(isinstance(version, int))
-        assert (version == 71)
+        assert (version == 345)
 #
 # def test_parse_events():
 #     events = parser.get_events()

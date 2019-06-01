@@ -1,9 +1,10 @@
 """Check hockey games"""
 import logging
+from service.hockey_game_stats import HockeyGameStats
 from service.checker import Checker
 
 
-class HockeyEventChecker(Checker):
+class CheckerImpl(Checker):
     """Check hockey games"""
 
     def __init__(self):
@@ -74,7 +75,7 @@ class HockeyEventChecker(Checker):
                and check_koef \
                and check_score_last_period
 
-    def _check_periods_passed(self, periods_passed_number, game_stat):
+    def _check_periods_passed(self, periods_passed_number: int, game_stat: HockeyGameStats) -> bool:
         """Checks if enough periods passed according to requirements"""
         if periods_passed_number is not None \
                 and periods_passed_number > int(game_stat.get_current_period_number()):

@@ -1,7 +1,7 @@
 """Main script to run the app"""
 import time
 from service.hockey_game_stats import HockeyGameStats
-from service.hockey_event_checker import HockeyEventChecker
+from service.hockey_event_checker import CheckerImpl
 from service.parse.parser import Parser
 from send.telegram_sender_impl import TelegramSender
 from service.parse.web.tor_request_impl import TorRequest
@@ -30,7 +30,7 @@ class Runner:
         parser = Parser(self._request)
         while True:
             game_stats = [HockeyGameStats(g) for g in parser.parse()]
-            checker = HockeyEventChecker()
+            checker = checker()
             for game_stat in game_stats:
                 game_stat.calculate()
                 result = checker.check_all(
@@ -70,5 +70,5 @@ if __name__ == "__main__":
     HANDLER.setFormatter(FORMATTER)
     logging.getLogger().addHandler(HANDLER)
 
-    runner = Runner(HockeyEventChecker, TorRequest)
+    runner = Runner(CheckerImpl, TorRequest)
     runner.run()
