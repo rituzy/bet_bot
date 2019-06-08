@@ -9,7 +9,10 @@ class HockeyGameStats:
 
     def calculate(self):
         """Logic to figure out the game statistics"""
-        self.match_total = sum(self.game.score_match) if self.game.score_match is not None else None
+        try:
+            self.match_total = sum(self.game.score_match) if self.game.score_match is not None else None
+        except TypeError:
+            self.match_total = None
 
     def get_last_period_total(self):
         """Get total for last period"""
