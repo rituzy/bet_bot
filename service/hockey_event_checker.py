@@ -17,7 +17,10 @@ class CheckerImpl(Checker):
             is_zero_score_last_period_3per
     ) -> bool:
         """main check function combines all checks"""
-        next_total_b_value = game_stat.get_match_total() + 0.5
+        total = game_stat.get_match_total()
+        if total is None:
+            return False
+        next_total_b_value = total + 0.5
         self.logger.debug('%s next_total_b_value %s', game_stat.game, str(next_total_b_value))
         check_2_per_result = self.check_2_period(
             game_stat, total_b_koef_2per_threshold_2per, 0.5,
